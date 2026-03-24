@@ -35,7 +35,7 @@ def load_valid_indices(dataset_dir, times, index_list):
     return np.array(valid, dtype=int)
 
 
-def evaluate(model, dataset_dir, times, target_values, binary_labels, indices, device):
+def evaluate(model, dataset_dir, times, target_values, binary_labels, indices, device, input_mean, input_std):
     model.eval()
     all_preds = []
     all_tgts = []
@@ -46,8 +46,7 @@ def evaluate(model, dataset_dir, times, target_values, binary_labels, indices, d
             dt = pd.Timestamp(times[t_idx])
             path = dataset_dir / "inputs" / str(dt.year) / f"X_{dt.strftime('%Y%m%d%H')}.pt"
             x = torch.load(path, weights_only=True).float().to(device)
-            if torch.isnan(x).any():
-                continue
+            x = (x - input_mean.to(device)) / input_std.to(device)
             pred = model(x.unsqueeze(0)).squeeze(0).cpu()
             tgt = target_values[t_idx + 24].cpu()
             all_preds.append(pred)
@@ -60,9 +59,6 @@ def evaluate(model, dataset_dir, times, target_values, binary_labels, indices, d
     preds = torch.stack(all_preds)
     tgts = torch.stack(all_tgts)
     binary = torch.stack(all_binary)
-
-    preds = torch.nan_to_num(preds, nan=0.0, posinf=1e6, neginf=-1e6)
-    tgts = torch.nan_to_num(tgts, nan=0.0, posinf=1e6, neginf=-1e6)
 
     mse = torch.mean((preds - tgts) ** 2, dim=0)
     rmse = torch.sqrt(mse)
@@ -98,10 +94,12 @@ def main():
     parser.add_argument("--dataset-root", type=Path, default=Path("/cluster/tufts/c26sp1cs0137/data/assignment2_data/dataset"))
     parser.add_argument("--output-model", type=Path, default=Path("./my_cnn_weights.pth"))
     parser.add_argument("--epochs", type=int, default=6)
-    parser.add_argument("--batch-size", type=int, default=8)
+    parser.add_argument("--batch-size", type=int, default=64, help="Batch size for training (increased for speed)")
     parser.add_argument("--lr", type=float, default=1e-3)
     parser.add_argument("--seed", type=int, default=42)
-    parser.add_argument("--device", type=str, default="cuda" if torch.cuda.is_available() else "cpu")
+    parser.add_argument("--skip-test", action="store_true", help="Skip test evaluation at the end")
+    parser.add_argument("--early-stopping-patience", type=int, default=3, help="Patience for early stopping (epochs without improvement)")
+    parser.add_argument("--no-early-stopping", action="store_true", help="Disable early stopping")
     args = parser.parse_args()
 
     random.seed(args.seed)
@@ -136,16 +134,54 @@ def main():
         candidate_test.extend(choose_indices(times, year))
     candidate_test = np.array(candidate_test, dtype=int)
 
-    print("Filtering NaN or missing inputs for train/val (this may take a few minutes)")
-    valid_train_val = load_valid_indices(dataset_dir, times, candidate_train_val)
+    # Check for cached valid indices
+    cache_train_val_path = Path("valid_indices_train_val.npy")
+    cache_test_path = Path("valid_indices_test.npy")
 
-    print("Filtering NaN or missing inputs for test")
-    valid_test = load_valid_indices(dataset_dir, times, candidate_test)
+    if cache_train_val_path.exists() and cache_test_path.exists():
+        print("Loading valid indices from cache...")
+        valid_train_val = np.load(cache_train_val_path)
+        valid_test = np.load(cache_test_path)
+    else:
+        print("Filtering NaN or missing inputs for train/val (this may take a few minutes)")
+        valid_train_val = load_valid_indices(dataset_dir, times, candidate_train_val)
+        print("Filtering NaN or missing inputs for test")
+        valid_test = load_valid_indices(dataset_dir, times, candidate_test)
+        # Cache for future runs
+        np.save(cache_train_val_path, valid_train_val)
+        np.save(cache_test_path, valid_test)
+        print(f"Cached valid indices to {cache_train_val_path} and {cache_test_path}")
 
     if len(valid_train_val) < 2:
         raise RuntimeError("Not enough valid train/val samples after filtering")
     if len(valid_test) < 1:
         raise RuntimeError("Not enough valid test samples after filtering")
+
+    # Compute input normalization stats from a sample of valid training data
+    print("Computing input normalization stats from sample of valid training data …")
+    sample_size = min(1000, len(valid_train_val))
+    sample_indices = np.random.choice(valid_train_val, size=sample_size, replace=False)
+    sample_inputs = []
+    for t_idx in sample_indices:
+        dt = pd.Timestamp(times[t_idx])
+        path = dataset_dir / "inputs" / str(dt.year) / f"X_{dt.strftime('%Y%m%d%H')}.pt"
+        try:
+            x = torch.load(path, weights_only=True).float()
+            if not torch.isnan(x).any():
+                sample_inputs.append(x)
+        except:
+            pass
+    if len(sample_inputs) > 0:
+        sample_stack = torch.stack(sample_inputs)  # (N, 450, 449, c)
+        input_mean = sample_stack.mean(dim=[0,1,2])  # (c,)
+        input_std = sample_stack.std(dim=[0,1,2])   # (c,)
+        input_std = torch.clamp(input_std, min=1e-6)  # avoid div by zero
+        print(f"Input mean: {input_mean.tolist()[:5]}... (showing first 5)")
+        print(f"Input std: {input_std.tolist()[:5]}... (showing first 5)")
+    else:
+        input_mean = torch.zeros(metadata["n_vars"])
+        input_std = torch.ones(metadata["n_vars"])
+        print("Warning: No valid samples for normalization, using identity.")
 
     # Shuffle train/val and split 80/20
     rng = np.random.default_rng(args.seed)
@@ -170,6 +206,38 @@ def main():
     print(f"Train/val years represented: {train_val_years_present.tolist()}")
     print(f"Test years represented: {test_years_present.tolist()}")
 
+    # Compute normalization stats from a subset of training data
+    print("Computing input normalization stats from training subset...")
+    subset_size = min(1000, len(valid_train_val))
+    subset_indices = np.random.choice(valid_train_val, subset_size, replace=False)
+    channel_means = []
+    channel_stds = []
+    n_channels = metadata["n_vars"]
+    for _ in range(n_channels):
+        channel_means.append([])
+        channel_stds.append([])
+
+    for t_idx in subset_indices:
+        dt = pd.Timestamp(times[t_idx])
+        path = dataset_dir / "inputs" / str(dt.year) / f"X_{dt.strftime('%Y%m%d%H')}.pt"
+        x = torch.load(path, weights_only=True).float()
+        if torch.isnan(x).any():
+            continue
+        # x: (450, 449, c)
+        for ch in range(n_channels):
+            ch_data = x[:, :, ch]
+            channel_means[ch].append(ch_data.mean().item())
+            channel_stds[ch].append(ch_data.std().item())
+
+    input_mean = torch.tensor([np.mean(channel_means[ch]) for ch in range(n_channels)])
+    input_std = torch.tensor([max(np.mean(channel_stds[ch]), 1e-6) for ch in range(n_channels)])  # avoid div by 0
+    print(f"Input normalization: mean shape {input_mean.shape}, std shape {input_std.shape}")
+
+    # Save normalization stats
+    norm_path = Path("normalization_stats.pt")
+    torch.save({"input_mean": input_mean, "input_std": input_std}, norm_path)
+    print(f"Saved normalization stats to {norm_path}")
+
 
     device = torch.device(args.device)
     model = get_model(metadata).to(device)
@@ -178,6 +246,13 @@ def main():
 
     best_val_rmse = float('inf')
     metrics_history = []
+    patience_counter = 0
+    early_stopping_enabled = not args.no_early_stopping
+
+    if early_stopping_enabled:
+        print(f"Early stopping enabled with patience={args.early_stopping_patience}")
+    else:
+        print("Early stopping disabled")
 
     for epoch in range(1, args.epochs + 1):
         model.train()
@@ -193,11 +268,9 @@ def main():
                 dt = pd.Timestamp(times[t_idx])
                 path = dataset_dir / "inputs" / str(dt.year) / f"X_{dt.strftime('%Y%m%d%H')}.pt"
                 x = torch.load(path, weights_only=True).float()
-                if torch.isnan(x).any():
-                    continue
+                # Apply normalization
+                x = (x - input_mean.view(1, 1, -1)) / input_std.view(1, 1, -1)
                 y = target_values[t_idx + 24]
-                if torch.isnan(y).any():
-                    continue
                 x_batch.append(x)
                 y_batch.append(y)
 
@@ -209,12 +282,6 @@ def main():
 
             optimizer.zero_grad()
             pred = model(x_batch)
-
-            if torch.isnan(pred).any():
-                pred = torch.nan_to_num(pred, nan=0.0, posinf=1e6, neginf=-1e6)
-            if torch.isnan(y_batch).any():
-                y_batch = torch.nan_to_num(y_batch, nan=0.0, posinf=1e6, neginf=-1e6)
-
             loss = criterion(pred, y_batch)
             loss.backward()
             torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
@@ -225,7 +292,7 @@ def main():
         epoch_loss = running_loss / max(1, len(train_idxs))
         print(f"Epoch {epoch}/{args.epochs}: train loss = {epoch_loss:.6f}")
 
-        val_metrics = evaluate(model, dataset_dir, times, target_values, binary_labels, val_idxs, device)
+        val_metrics = evaluate(model, dataset_dir, times, target_values, binary_labels, val_idxs, device, input_mean, input_std)
         print(f"  Val RMSE (each var): {val_metrics['rmse']}")
         print(f"  Val APCP>2mm RMSE: {val_metrics['rmse_apcp_rain']:.4f}, AUC: {val_metrics['auc_apcp']:.4f}")
 
@@ -236,6 +303,12 @@ def main():
             best_val_rmse = val_loss
             torch.save(model.state_dict(), args.output_model)
             print(f"  Saved best model weights to {args.output_model}")
+            patience_counter = 0  # Reset patience
+        else:
+            patience_counter += 1
+            if early_stopping_enabled and patience_counter >= args.early_stopping_patience:
+                print(f"Early stopping triggered: no improvement for {args.early_stopping_patience} epochs")
+                break
 
     print("Training complete.")
 
@@ -243,18 +316,24 @@ def main():
     if not args.output_model.exists():
         torch.save(model.state_dict(), args.output_model)
         print(f"No best model file found, saved final model weights to {args.output_model}")
-
-    print("Evaluating test set...")
-    if args.output_model.exists():
-        model.load_state_dict(torch.load(args.output_model, map_location=device))
     else:
-        print(f"WARNING: {args.output_model} not found. Evaluating current model state without loading.")
+        print(f"Best validation RMSE: {best_val_rmse:.6f}")
 
-    test_metrics = evaluate(model, dataset_dir, times, target_values, binary_labels, test_idxs, device)
-    print(f"Test RMSE (each var): {test_metrics['rmse']}")
-    print(f"Test APCP>2mm RMSE: {test_metrics['rmse_apcp_rain']:.4f}, AUC: {test_metrics['auc_apcp']:.4f}")
+    if not args.skip_test:
+        print("Evaluating test set...")
+        if args.output_model.exists():
+            model.load_state_dict(torch.load(args.output_model, map_location=device))
+        else:
+            print(f"WARNING: {args.output_model} not found. Evaluating current model state without loading.")
 
-    metrics_history.append({"epoch": "test", **test_metrics})
+        test_metrics = evaluate(model, dataset_dir, times, target_values, binary_labels, test_idxs, device, input_mean, input_std)
+        print(f"Test RMSE (each var): {test_metrics['rmse']}")
+        print(f"Test APCP>2mm RMSE: {test_metrics['rmse_apcp_rain']:.4f}, AUC: {test_metrics['auc_apcp']:.4f}")
+
+        metrics_history.append({"epoch": "test", **test_metrics})
+    else:
+        print("Skipping test evaluation as requested.")
+
     history_path = Path("training_metrics.json")
     import json
     history_path.write_text(json.dumps(metrics_history, indent=2))

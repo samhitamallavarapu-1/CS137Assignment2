@@ -6,7 +6,7 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=32G
-#SBATCH --time=01:00:00
+#SBATCH --time=24:00:00
 #SBATCH --output=logs/%x_%j.out
 #SBATCH --error=logs/%x_%j.err
 
@@ -26,6 +26,6 @@ nvidia-smi
 
 python -c "import torch; print('torch:', torch.__version__); print('cuda available:', torch.cuda.is_available()); print('gpu count:', torch.cuda.device_count())"
 
-python train.py --epochs 2 --no-early-stopping --skip-test
+python train.py --epochs 80 --early-stopping-patience 3 --skip-test
 
 echo "Finished at $(date)"

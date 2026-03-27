@@ -21,11 +21,11 @@ echo "Running on $(hostname)"
 echo "Started at $(date)"
 echo "Using Python: $PYTHON"
 
-python --version
+$PYTHON --version
 nvidia-smi
 
-python -c "import torch; print('torch:', torch.__version__); print('cuda available:', torch.cuda.is_available()); print('gpu count:', torch.cuda.device_count())"
+$PYTHON -c "import torch; print('torch:', torch.__version__); print('cuda available:', torch.cuda.is_available()); print('gpu count:', torch.cuda.device_count())"
 
-python train.py --epochs 80 --early-stopping-patience 3 --skip-test
+$PYTHON train.py --epochs 80 --early-stopping-patience 3 --skip-test
 
 echo "Finished at $(date)"

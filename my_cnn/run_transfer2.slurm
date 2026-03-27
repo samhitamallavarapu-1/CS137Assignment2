@@ -28,12 +28,11 @@ $PYTHON -c "import torch; print('torch:', torch.__version__); print('cuda availa
 $PYTHON train_transfer.py \
   --model-name resnet50 \
   --pretrained \
-  --train-mode gradual_unfreeze \
-  --unfreeze-every 2 \
-  --epochs 10 \
-  --batch-size 8 \
-  --lr 1e-4 \
+  --train-mode full \
+  --epochs 80 \
+  --batch-size 64 \
+  --lr 1e-3 \
   --device cuda \
-  --output-dir outputs_transfer
+  --output-dir outputs_transfer_full
 
 echo "Finished at $(date)"

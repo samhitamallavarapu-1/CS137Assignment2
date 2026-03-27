@@ -26,6 +26,6 @@ nvidia-smi
 
 $PYTHON -c "import torch; print('torch:', torch.__version__); print('cuda available:', torch.cuda.is_available()); print('gpu count:', torch.cuda.device_count())"
 
-$PYTHON train.py --epochs 80 --no-early-stopping --skip-test
+$PYTHON train.py --epochs 80 --no-early-stopping --skip-test --skip-normalization
 
 echo "Finished at $(date)"

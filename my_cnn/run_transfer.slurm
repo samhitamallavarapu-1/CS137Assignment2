@@ -25,7 +25,15 @@ $PYTHON --version
 nvidia-smi
 
 $PYTHON -c "import torch; print('torch:', torch.__version__); print('cuda available:', torch.cuda.is_available()); print('gpu count:', torch.cuda.device_count())"
-
-$PYTHON train.py --epochs 80 --no-early-stopping --skip-test
+$PYTHON train_transfer.py \
+  --model-name resnet50 \
+  --pretrained \
+  --train-mode gradual_unfreeze \
+  --unfreeze-every 2 \
+  --epochs 10 \
+  --batch-size 8 \
+  --lr 1e-4 \
+  --device cuda \
+  --output-dir outputs_transfer
 
 echo "Finished at $(date)"

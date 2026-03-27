@@ -25,7 +25,7 @@ $PYTHON --version
 nvidia-smi
 
 $PYTHON -c "import torch; print('torch:', torch.__version__); print('cuda available:', torch.cuda.is_available()); print('gpu count:', torch.cuda.device_count())"
-$PYTHON train_transfer.py \
+$PYTHON transfer_training.py \
   --model-name resnet50 \
   --pretrained \
   --train-mode last_layer \

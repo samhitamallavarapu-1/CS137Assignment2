@@ -26,7 +26,7 @@ nvidia-smi
 
 $PYTHON -c "import torch; print('torch:', torch.__version__); print('cuda available:', torch.cuda.is_available()); print('gpu count:', torch.cuda.device_count())"
 $PYTHON transfer_training.py \
-  --model-name resnet50 \
+  --model-name densenet121 \
   --pretrained \
   --train-mode last_layer \
   --epochs 20 \

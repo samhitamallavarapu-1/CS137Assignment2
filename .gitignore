@@ -4,3 +4,4 @@ __pycache__/
 *.npy
 *.out
 *.err
+my_cnn/stanford_cars/*

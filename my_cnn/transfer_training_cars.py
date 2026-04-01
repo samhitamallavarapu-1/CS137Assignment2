@@ -10,8 +10,9 @@ import torch.nn as nn
 import torch.optim as optim
 import torchvision.models as tv_models
 import torchvision.transforms as T
+from PIL import Image
+from scipy.io import loadmat
 from torch.utils.data import DataLoader, Dataset, Subset
-from torchvision.datasets import StanfordCars
 from tqdm import tqdm
 
 
@@ -27,6 +28,121 @@ def log(msg: str) -> None:
 # ============================================================
 # Dataset utilities
 # ============================================================
+
+def _to_list(x):
+    if isinstance(x, np.ndarray):
+        if x.ndim == 0:
+            return [x.item()]
+        return list(x)
+    return [x]
+
+
+class StanfordCarsCustom(Dataset):
+    """
+    Custom loader for Stanford Cars using the folder structure currently in your HPC:
+
+    dataset_root/
+    ├── cars_train/
+    ├── cars_test/
+    ├── devkit/
+    │   └── devkit/
+    │       ├── cars_meta.mat
+    │       ├── cars_train_annos.mat
+    │       └── ...
+    └── cars_test_annos_withlabels.mat
+    """
+
+    def __init__(self, dataset_root: Path, split: str = "train", transform=None):
+        self.dataset_root = Path(dataset_root)
+        self.split = split
+        self.transform = transform
+
+        if split not in {"train", "test"}:
+            raise ValueError("split must be 'train' or 'test'")
+
+        self.devkit_dir = self.dataset_root / "devkit" / "devkit"
+        self.train_dir = self.dataset_root / "cars_train"
+        self.test_dir = self.dataset_root / "cars_test"
+
+        self.meta_path = self.devkit_dir / "cars_meta.mat"
+        self.train_annos_path = self.devkit_dir / "cars_train_annos.mat"
+        self.test_annos_path = self.dataset_root / "cars_test_annos_withlabels.mat"
+
+        self._check_files()
+
+        self.classes = self._load_classes()
+        self.samples = self._load_samples()
+
+    def _check_files(self):
+        required = [
+            self.meta_path,
+            self.train_dir,
+            self.test_dir,
+        ]
+
+        if self.split == "train":
+            required.append(self.train_annos_path)
+        else:
+            required.append(self.test_annos_path)
+
+        missing = [str(p) for p in required if not Path(p).exists()]
+        if missing:
+            raise RuntimeError(
+                "Stanford Cars custom dataset is missing required files/folders:\n"
+                + "\n".join(missing)
+            )
+
+    def _load_classes(self) -> List[str]:
+        meta = loadmat(self.meta_path, squeeze_me=True, struct_as_record=False)
+        class_names = meta["class_names"]
+
+        if isinstance(class_names, np.ndarray):
+            classes = [str(x) for x in class_names.tolist()]
+        else:
+            classes = [str(class_names)]
+
+        return classes
+
+    def _extract_annos(self, annos_obj):
+        annos_list = _to_list(annos_obj)
+        parsed = []
+
+        for a in annos_list:
+            fname = str(a.fname)
+
+            if hasattr(a, "class_"):
+                label = int(a.class_) - 1
+            else:
+                label = int(getattr(a, "class")) - 1
+
+            parsed.append((fname, label))
+
+        return parsed
+
+    def _load_samples(self):
+        if self.split == "train":
+            mat = loadmat(self.train_annos_path, squeeze_me=True, struct_as_record=False)
+            annos = mat["annotations"]
+            parsed = self._extract_annos(annos)
+            return [(self.train_dir / fname, label) for fname, label in parsed]
+
+        mat = loadmat(self.test_annos_path, squeeze_me=True, struct_as_record=False)
+        annos = mat["annotations"]
+        parsed = self._extract_annos(annos)
+        return [(self.test_dir / fname, label) for fname, label in parsed]
+
+    def __len__(self):
+        return len(self.samples)
+
+    def __getitem__(self, idx):
+        image_path, label = self.samples[idx]
+        image = Image.open(image_path).convert("RGB")
+
+        if self.transform is not None:
+            image = self.transform(image)
+
+        return image, label
+
 
 class TransformSubset(Dataset):
     def __init__(self, subset: Subset, transform=None):
@@ -48,8 +164,10 @@ def build_train_val_test_splits(
     seed: int,
     val_fraction: float = 0.2,
 ):
-    train_base = StanfordCars(root=str(dataset_root), split="train", download=True)
-    test_base = StanfordCars(root=str(dataset_root), split="test", download=True)
+    log(f"Looking for Stanford Cars under: {dataset_root}")
+
+    train_base = StanfordCarsCustom(dataset_root=dataset_root, split="train", transform=None)
+    test_base = StanfordCarsCustom(dataset_root=dataset_root, split="test", transform=None)
 
     n_train_total = len(train_base)
     indices = np.arange(n_train_total)
@@ -73,11 +191,8 @@ def build_train_val_test_splits(
 # ============================================================
 
 def compute_normalization_stats(dataset, batch_size=64, num_workers=0):
-    """
-    Compute per-channel mean/std for an image dataset returning tensors in [0,1].
-    """
     if len(dataset) == 0:
-        log("Warning: Empty dataset for normalization. Using ImageNet-like identity fallback.")
+        log("Warning: Empty dataset for normalization. Using fallback.")
         return torch.zeros(3), torch.ones(3)
 
     loader = DataLoader(
@@ -93,7 +208,6 @@ def compute_normalization_stats(dataset, batch_size=64, num_workers=0):
     total_pixels = 0
 
     for images, _labels in tqdm(loader, desc="Computing normalization stats", leave=False):
-        # images shape: (B, C, H, W)
         if not torch.isfinite(images).all():
             continue
 
@@ -524,12 +638,12 @@ def train_transfer_model(
 # ============================================================
 
 def main():
-    parser = argparse.ArgumentParser(description="Transfer learning trainer for torchvision Stanford Cars")
+    parser = argparse.ArgumentParser(description="Transfer learning trainer for Stanford Cars (custom local folder)")
     parser.add_argument(
         "--dataset-root",
         type=Path,
-        default=Path("./data"),
-        help="Root directory for Stanford Cars download/cache",
+        default=Path("./stanford_cars"),
+        help="Path directly to the stanford_cars folder",
     )
     parser.add_argument(
         "--model-name",
@@ -601,7 +715,7 @@ def main():
         "--val-fraction",
         type=float,
         default=0.2,
-        help="Fraction of Stanford Cars train split used as validation",
+        help="Fraction of train split used as validation",
     )
     args = parser.parse_args()
 

@@ -25,14 +25,14 @@ $PYTHON --version
 nvidia-smi
 
 $PYTHON -c "import torch; print('torch:', torch.__version__); print('cuda available:', torch.cuda.is_available()); print('gpu count:', torch.cuda.device_count())"
-$PYTHON transfer_training.py \
-  --model-name densenet121 \
+$PYTHON transfer_training_cars.py \
+  --model-name resnet50 \
   --pretrained \
   --train-mode full \
   --epochs 80 \
   --batch-size 64 \
   --lr 1e-3 \
   --device cuda \
-  --output-dir outputs_transfer_full
+  --output-dir outputs_transfer_cars_full_resnet50
 
 echo "Finished at $(date)"

@@ -1,0 +1,80 @@
+[
+  {
+    "architecture": "densenet121",
+    "strategy_1": "full",
+    "strategy_2": "gradual",
+    "mean_cka_across_layers": 0.7650705724954605,
+    "std_cka_across_layers": 0.2692988293668323,
+    "mean_cca_across_layers": 0.7311120301404429,
+    "std_cca_across_layers": 0.09570769378372869,
+    "min_cka": 0.23973014950752258,
+    "max_cka": 0.9952765107154846,
+    "min_cca": 0.5764879314079038,
+    "max_cca": 0.8438164459382596
+  },
+  {
+    "architecture": "densenet121",
+    "strategy_1": "full",
+    "strategy_2": "last_layer",
+    "mean_cka_across_layers": 0.7322042149802049,
+    "std_cka_across_layers": 0.3300503100992838,
+    "mean_cca_across_layers": 0.7061532137104026,
+    "std_cca_across_layers": 0.1429221260144116,
+    "min_cka": 0.10981128364801407,
+    "max_cka": 0.9952738285064697,
+    "min_cca": 0.46369936064907186,
+    "max_cca": 0.8574342612038935
+  },
+  {
+    "architecture": "densenet121",
+    "strategy_1": "full",
+    "strategy_2": "scratch",
+    "mean_cka_across_layers": 0.4779358059167862,
+    "std_cka_across_layers": 0.19082978673117623,
+    "mean_cca_across_layers": 0.5157265562845937,
+    "std_cca_across_layers": 0.0858234402564304,
+    "min_cka": 0.146375834941864,
+    "max_cka": 0.7372533679008484,
+    "min_cca": 0.4030321588346606,
+    "max_cca": 0.6746178132224376
+  },
+  {
+    "architecture": "densenet121",
+    "strategy_1": "gradual",
+    "strategy_2": "last_layer",
+    "mean_cka_across_layers": 0.778622125585874,
+    "std_cka_across_layers": 0.3275388811809135,
+    "mean_cca_across_layers": 0.7541159935063906,
+    "std_cca_across_layers": 0.11355519734129817,
+    "min_cka": 0.06869331002235413,
+    "max_cka": 0.9999967813491821,
+    "min_cca": 0.5368099658496294,
+    "max_cca": 0.8614637899319172
+  },
+  {
+    "architecture": "densenet121",
+    "strategy_1": "gradual",
+    "strategy_2": "scratch",
+    "mean_cka_across_layers": 0.4184134105841319,
+    "std_cka_across_layers": 0.21652010920642922,
+    "mean_cca_across_layers": 0.5123908370248152,
+    "std_cca_across_layers": 0.0823274624890795,
+    "min_cka": 0.03455042839050293,
+    "max_cka": 0.6720762252807617,
+    "min_cca": 0.40733065977258825,
+    "max_cca": 0.6650322349301895
+  },
+  {
+    "architecture": "densenet121",
+    "strategy_1": "last_layer",
+    "strategy_2": "scratch",
+    "mean_cka_across_layers": 0.4076823964715004,
+    "std_cka_across_layers": 0.21928780227580041,
+    "mean_cca_across_layers": 0.5087749194457765,
+    "std_cca_across_layers": 0.09083566380901842,
+    "min_cka": 0.05161009728908539,
+    "max_cka": 0.6726056933403015,
+    "min_cca": 0.4056223474155179,
+    "max_cca": 0.6782679559387053
+  }
+]

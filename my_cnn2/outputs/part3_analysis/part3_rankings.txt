@@ -1,0 +1,23 @@
+Part 3 Rankings
+
+By test top-1 accuracy:
+
+1. resnet152 | full | test_top1=0.8445 | test_top5=0.9580
+2. densenet121 | full | test_top1=0.8291 | test_top5=0.9608
+3. resnet152 | gradual | test_top1=0.7814 | test_top5=0.9338
+4. densenet121 | gradual | test_top1=0.7482 | test_top5=0.9200
+5. densenet121 | last_layer | test_top1=0.4690 | test_top5=0.7416
+6. resnet152 | last_layer | test_top1=0.4106 | test_top5=0.6786
+7. densenet121 | scratch | test_top1=0.2345 | test_top5=0.4834
+8. resnet152 | scratch | test_top1=0.1821 | test_top5=0.4190
+
+By best validation top-1 accuracy:
+
+1. resnet152 | full | best_val_top1=0.8557 | best_val_top5=0.9552
+2. densenet121 | full | best_val_top1=0.8281 | best_val_top5=0.9576
+3. resnet152 | gradual | best_val_top1=0.7808 | best_val_top5=0.9325
+4. densenet121 | gradual | best_val_top1=0.7612 | best_val_top5=0.9196
+5. densenet121 | last_layer | best_val_top1=0.4579 | best_val_top5=0.7354
+6. resnet152 | last_layer | best_val_top1=0.4107 | best_val_top5=0.6820
+7. densenet121 | scratch | best_val_top1=0.2394 | best_val_top5=0.4917
+8. resnet152 | scratch | best_val_top1=0.1928 | best_val_top5=0.4334

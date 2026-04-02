@@ -1,0 +1,22 @@
+python - <<'PY'
+import torch
+from model import get_model
+import pandas as pd
+from pathlib import Path
+
+dataset_root = Path("/cluster/tufts/c26sp1cs0137/data/assignment2_data/dataset")
+metadata = torch.load(dataset_root / "metadata.pt", weights_only=False)
+targets = torch.load(dataset_root / "targets.pt", weights_only=False)
+times = targets["time"]
+
+t_idx = 0
+dt = pd.Timestamp(times[t_idx])
+x = torch.load(dataset_root / "inputs" / str(dt.year) / f"X_{dt.strftime('%Y%m%d%H')}.pt", weights_only=True).float()
+
+model = get_model(metadata)
+
+with torch.no_grad():
+    y = model(x.unsqueeze(0))
+
+print(y)
+PY

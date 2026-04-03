@@ -1,6 +1,6 @@
 python - <<'PY'
 import torch
-from model import get_model
+from mycnn2_model import get_model
 import pandas as pd
 from pathlib import Path
 

@@ -1,0 +1,13 @@
+feature,top_k_count
+HGT@surface,3
+MCDC@middle_cloud_layer,3
+TMP@1000mb,3
+UGRD@10m_above_ground,3
+UGRD@500mb,3
+UGRD@850mb,3
+VGRD@250mb,3
+VIL@entire_atmosphere,3
+UGRD@250mb,2
+UGRD@925mb,2
+RH@2m_above_ground,1
+VGRD@925mb,1

@@ -1,0 +1,18 @@
+{
+  "example_id": "03_confidently_correct_tidx_24909",
+  "group": "confidently_correct",
+  "t_idx": 24909,
+  "timestamp": "2021-05-15 21:00:00",
+  "tensor_shape_original": [
+    1,
+    450,
+    449,
+    42
+  ],
+  "tensor_shape_used": [
+    450,
+    449,
+    42
+  ],
+  "note": "Channels are NOT guaranteed to match feature names because CSV was sorted."
+}

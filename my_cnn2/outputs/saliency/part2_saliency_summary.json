@@ -1,0 +1,110 @@
+[
+  {
+    "case": "FN",
+    "t_idx": 37575,
+    "timestamp": "2022-10-25 15:00:00",
+    "input_path": "/cluster/tufts/c26sp1cs0137/data/assignment2_data/dataset/inputs/2022/X_2022102515.pt",
+    "pred_apcp": -0.07892101258039474,
+    "true_apcp": 2.445345878601074,
+    "pred_rain": false,
+    "true_rain": true,
+    "top_10_channels": [
+      {
+        "variable": "VIL@entire_atmosphere",
+        "saliency": 9.043453985668748e-08
+      },
+      {
+        "variable": "APCP_1hr_acc_fcst@surface",
+        "saliency": 5.030524619087373e-08
+      },
+      {
+        "variable": "VGRD@10m_above_ground",
+        "saliency": 8.449617894257244e-09
+      },
+      {
+        "variable": "UGRD@10m_above_ground",
+        "saliency": 8.024365172332182e-09
+      },
+      {
+        "variable": "GUST@surface",
+        "saliency": 6.631562854408912e-09
+      },
+      {
+        "variable": "UGRD@1000mb",
+        "saliency": 6.629156779069945e-09
+      },
+      {
+        "variable": "VGRD@1000mb",
+        "saliency": 6.424919707370691e-09
+      },
+      {
+        "variable": "UGRD@925mb",
+        "saliency": 4.355642957420969e-09
+      },
+      {
+        "variable": "UGRD@850mb",
+        "saliency": 4.196642588993882e-09
+      },
+      {
+        "variable": "VGRD@925mb",
+        "saliency": 4.135316977738057e-09
+      }
+    ],
+    "spatial_heatmap_path": "outputs/saliency/FN_spatial_heatmap.png",
+    "channel_saliency_plot_path": "outputs/saliency/FN_channel_saliency.png"
+  },
+  {
+    "case": "TN",
+    "t_idx": 37999,
+    "timestamp": "2022-11-12 07:00:00",
+    "input_path": "/cluster/tufts/c26sp1cs0137/data/assignment2_data/dataset/inputs/2022/X_2022111207.pt",
+    "pred_apcp": -0.08376824110746384,
+    "true_apcp": 0.007934479974210262,
+    "pred_rain": false,
+    "true_rain": false,
+    "top_10_channels": [
+      {
+        "variable": "VIL@entire_atmosphere",
+        "saliency": 8.823373320865358e-08
+      },
+      {
+        "variable": "APCP_1hr_acc_fcst@surface",
+        "saliency": 4.748966730971915e-08
+      },
+      {
+        "variable": "VGRD@10m_above_ground",
+        "saliency": 8.174449561693109e-09
+      },
+      {
+        "variable": "UGRD@10m_above_ground",
+        "saliency": 7.601943075030704e-09
+      },
+      {
+        "variable": "GUST@surface",
+        "saliency": 6.364569316019697e-09
+      },
+      {
+        "variable": "UGRD@1000mb",
+        "saliency": 6.2847762549722574e-09
+      },
+      {
+        "variable": "VGRD@1000mb",
+        "saliency": 6.12983575010162e-09
+      },
+      {
+        "variable": "UGRD@925mb",
+        "saliency": 4.356484506473635e-09
+      },
+      {
+        "variable": "VGRD@925mb",
+        "saliency": 4.1049306176432765e-09
+      },
+      {
+        "variable": "UGRD@850mb",
+        "saliency": 4.064653946755925e-09
+      }
+    ],
+    "spatial_heatmap_path": "outputs/saliency/TN_spatial_heatmap.png",
+    "channel_saliency_plot_path": "outputs/saliency/TN_channel_saliency.png"
+  }
+]

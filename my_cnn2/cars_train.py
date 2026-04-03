@@ -16,6 +16,7 @@ from cars_models import (
     set_last_layer_only,
     set_full_finetune,
     set_gradual_unfreeze,
+    set_sliding_window_finetune,
 )
 
 
@@ -82,9 +83,11 @@ def main():
     parser.add_argument("--cars-root", type=Path, default=Path("stanford_cars"))
     parser.add_argument("--output-dir", type=Path, default=Path("outputs"))
     parser.add_argument("--model-name", type=str, choices=["densenet121", "resnet152"], required=True)
-    parser.add_argument("--strategy", type=str, choices=["scratch", "last_layer", "full", "gradual"], required=True)
+    parser.add_argument("--strategy", type=str, choices=["scratch", "last_layer", "full", "gradual", "sliding_window"], required=True)
     parser.add_argument("--epochs", type=int, default=80)
     parser.add_argument("--unfreeze-every", type=int, default=10)
+    parser.add_argument("--slide-every", type=int, default=10)
+    parser.add_argument("--window-size", type=int, default=2)
     parser.add_argument("--batch-size", type=int, default=32)
     parser.add_argument("--lr", type=float, default=1e-4)
     parser.add_argument("--weight-decay", type=float, default=0.0)
@@ -137,12 +140,49 @@ def main():
         pin_memory=True,
     )
 
-    pretrained = args.strategy != "scratch"
-    model = get_model(
-        model_name=args.model_name,
-        num_classes=196,
-        pretrained=pretrained,
-    ).to(device)
+    # pretrained = args.strategy != "scratch"
+    # model = get_model(
+    #     model_name=args.model_name,
+    #     num_classes=196,
+    #     pretrained=pretrained,
+    # ).to(device)
+
+    if args.strategy == "scratch":
+        set_full_finetune(model)
+        strategy_note = "all parameters trainable from scratch"
+
+    elif args.strategy == "last_layer":
+        set_last_layer_only(model)
+        strategy_note = "only final classification layer trainable"
+
+    elif args.strategy == "full":
+        set_full_finetune(model)
+        strategy_note = "all pretrained parameters trainable"
+
+    elif args.strategy == "gradual":
+        info = set_gradual_unfreeze(
+            model,
+            epoch=epoch,
+            unfreeze_every=args.unfreeze_every,
+        )
+        strategy_note = (
+            f"head + {info['n_backbone_blocks_trainable']} output-side backbone block(s) trainable"
+        )
+
+    elif args.strategy == "sliding_window":
+        info = set_sliding_window_finetune(
+            model,
+            epoch=epoch,
+            slide_every=args.slide_every,
+            window_size=args.window_size,
+        )
+        strategy_note = (
+            f"head always trainable; sliding window over backbone blocks "
+            f"{info['window_start']} to {info['window_end']}"
+        )
+
+    else:
+        raise ValueError(f"Unknown strategy: {args.strategy}")
 
     criterion = nn.CrossEntropyLoss()
 

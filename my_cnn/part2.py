@@ -46,12 +46,12 @@ def load_valid_indices(dataset_dir, times, index_list, target_values, binary_lab
         y = target_values[t_idx + 24]
         b = binary_labels[t_idx + 24].float()
 
-        if not torch.isfinite(x).all():
-            continue
-        if not torch.isfinite(y).all():
-            continue
-        if not torch.isfinite(b).all():
-            continue
+        # if not torch.isfinite(x).all():
+        #     continue
+        # if not torch.isfinite(y).all():
+        #     continue
+        # if not torch.isfinite(b).all():
+        #     continue
 
         valid.append(int(t_idx))
 

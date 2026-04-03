@@ -5,7 +5,7 @@ from collections import defaultdict
 from datetime import datetime
 from itertools import combinations
 from pathlib import Path
-from typing import Dict, List, Tuple, Optional
+from typing import Dict, List, Optional
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -156,7 +156,7 @@ class WeatherTransferDataset(Dataset):
         y = self.target_values[t_idx + 24].float()
 
         x = (x - self.input_mean) / self.input_std
-        x = x.permute(2, 0, 1).contiguous()  # channels-first for torchvision
+        x = x.permute(2, 0, 1).contiguous()
 
         return x, y
 
@@ -343,19 +343,6 @@ def get_pretrained_backbone(
 # ============================================================
 
 def parse_checkpoint_info(path: Path) -> Dict[str, str]:
-    """
-    Example:
-      resnet50_weather_pretrained_last_layer_best.pth
-      efficientnet_b0_weather_pretrained_gradual_unfreeze_every2_best.pth
-
-    Returns:
-      {
-        "architecture": "...",
-        "pretrain_tag": "pretrained" or "scratch",
-        "method_tag": "...",
-        "kind": "best" or "final"
-      }
-    """
     stem = path.stem
     if "_weather_" not in stem:
         raise ValueError(f"Unexpected checkpoint naming: {path.name}")
@@ -452,9 +439,6 @@ def get_layer_names_for_architecture(model_name: str) -> List[str]:
 
 
 def summarize_activation(tensor: torch.Tensor) -> torch.Tensor:
-    """
-    Convert arbitrary layer output into (B, D) summary vectors.
-    """
     if isinstance(tensor, (tuple, list)):
         tensor = tensor[0]
 
@@ -462,12 +446,9 @@ def summarize_activation(tensor: torch.Tensor) -> torch.Tensor:
         raise ValueError("Hook output is not a tensor")
 
     if tensor.ndim == 4:
-        # (B, C, H, W) -> (B, C)
         return tensor.mean(dim=(2, 3))
 
     if tensor.ndim == 3:
-        # Could be (B, T, D) or (B, C, L)
-        # Use mean over non-batch dimensions except last if transformer-like.
         return tensor.mean(dim=1)
 
     if tensor.ndim == 2:
@@ -545,9 +526,6 @@ def center_rows(X: np.ndarray) -> np.ndarray:
 
 
 def linear_cka(X: np.ndarray, Y: np.ndarray) -> float:
-    """
-    Linear CKA using feature matrices X, Y of shape (n_samples, n_features).
-    """
     X = center_rows(X)
     Y = center_rows(Y)
 
@@ -568,10 +546,6 @@ def cca_similarity(
     n_components: Optional[int] = None,
     eps: float = 1e-8,
 ) -> Dict[str, float]:
-    """
-    PCA + CCA for stability.
-    Returns mean, max, and first canonical correlation.
-    """
     if X.shape[0] != Y.shape[0]:
         raise ValueError("X and Y must have same number of samples for CCA")
 
@@ -693,6 +667,66 @@ def plot_pair_lines(
     plt.close()
 
 
+def plot_triangular_method_heatmap(
+    matrix: np.ndarray,
+    labels: List[str],
+    title: str,
+    output_path: Path,
+    value_fmt: str = ".2f",
+    mask_lower: bool = True,
+):
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    display = matrix.copy()
+
+    if mask_lower:
+        for i in range(display.shape[0]):
+            for j in range(display.shape[1]):
+                if i > j:
+                    display[i, j] = np.nan
+
+    fig, ax = plt.subplots(figsize=(max(7, len(labels) * 1.2), max(6, len(labels) * 1.0)))
+    im = ax.imshow(display, aspect="equal")
+
+    ax.set_xticks(np.arange(len(labels)))
+    ax.set_yticks(np.arange(len(labels)))
+    ax.set_xticklabels(labels, rotation=45, ha="right")
+    ax.set_yticklabels(labels)
+    ax.set_title(title)
+
+    for i in range(display.shape[0]):
+        for j in range(display.shape[1]):
+            val = display[i, j]
+            if np.isnan(val):
+                text = ""
+            else:
+                text = format(val, value_fmt)
+            ax.text(j, i, text, ha="center", va="center", fontsize=8)
+
+    fig.colorbar(im, ax=ax)
+    plt.tight_layout()
+    plt.savefig(output_path, dpi=300)
+    plt.close()
+
+
+# ============================================================
+# Helpers for non-redundant pair naming / matrices
+# ============================================================
+
+def canonical_pair(m1: str, m2: str):
+    return tuple(sorted([m1, m2]))
+
+
+def initialize_square_similarity_dict(method_names: List[str], layer_names: List[str]):
+    data = {}
+    for metric in ["cka", "cca"]:
+        data[metric] = {
+            layer: np.full((len(method_names), len(method_names)), np.nan, dtype=float)
+            for layer in layer_names
+        }
+    return data
+
+
 # ============================================================
 # Main comparison logic
 # ============================================================
@@ -706,6 +740,7 @@ def compare_architecture_methods(
     output_dir: Path,
     cca_max_dim: int,
     max_val_samples: Optional[int],
+    save_pair_line_plots: bool = False,
 ):
     if len(checkpoints) < 2:
         log(f"Skipping {architecture}: need at least 2 methods, found {len(checkpoints)}")
@@ -718,13 +753,14 @@ def compare_architecture_methods(
     n_input_channels = int(metadata["n_vars"])
     layer_names = get_layer_names_for_architecture(architecture)
 
-    # Sort by method tag for stable output
     checkpoints = sorted(checkpoints, key=lambda x: x["method_tag"])
 
     log(f"Processing architecture {architecture} with methods: {[c['method_tag'] for c in checkpoints]}")
     log(f"Using layers: {layer_names}")
 
     reps_by_method = {}
+    method_names = [c["method_tag"] for c in checkpoints]
+    method_to_idx = {m: i for i, m in enumerate(method_names)}
 
     for ckpt in checkpoints:
         pretrained_flag = (ckpt["pretrain_tag"] == "pretrained")
@@ -751,16 +787,25 @@ def compare_architecture_methods(
 
     pair_rows = []
     summary_rows = []
+    square_similarity = initialize_square_similarity_dict(method_names, layer_names)
 
-    method_names = [c["method_tag"] for c in checkpoints]
+    # Diagonal = self-similarity
+    for layer_name in layer_names:
+        for m in method_names:
+            idx = method_to_idx[m]
+            square_similarity["cka"][layer_name][idx, idx] = 1.0
+            square_similarity["cca"][layer_name][idx, idx] = 1.0
+
     method_pairs = list(combinations(method_names, 2))
 
-    cka_matrix = np.full((len(method_pairs), len(layer_names)), np.nan, dtype=float)
-    cca_matrix = np.full((len(method_pairs), len(layer_names)), np.nan, dtype=float)
+    cka_pair_matrix = np.full((len(method_pairs), len(layer_names)), np.nan, dtype=float)
+    cca_pair_matrix = np.full((len(method_pairs), len(layer_names)), np.nan, dtype=float)
     row_labels = []
 
-    for pair_idx, (m1, m2) in enumerate(method_pairs):
+    for pair_idx, (m1_raw, m2_raw) in enumerate(method_pairs):
+        m1, m2 = canonical_pair(m1_raw, m2_raw)
         row_labels.append(f"{m1} vs {m2}")
+
         cka_vals = []
         cca_vals = []
 
@@ -770,12 +815,20 @@ def compare_architecture_methods(
 
             cka_val = linear_cka(X, Y)
             cca_stats = cca_similarity(X, Y, max_dim=cca_max_dim)
+            cca_val = cca_stats["cca_mean"]
 
-            cka_matrix[pair_idx, layer_idx] = cka_val
-            cca_matrix[pair_idx, layer_idx] = cca_stats["cca_mean"]
+            cka_pair_matrix[pair_idx, layer_idx] = cka_val
+            cca_pair_matrix[pair_idx, layer_idx] = cca_val
+
+            i = method_to_idx[m1]
+            j = method_to_idx[m2]
+            square_similarity["cka"][layer_name][i, j] = cka_val
+            square_similarity["cka"][layer_name][j, i] = cka_val
+            square_similarity["cca"][layer_name][i, j] = cca_val
+            square_similarity["cca"][layer_name][j, i] = cca_val
 
             cka_vals.append(cka_val)
-            cca_vals.append(cca_stats["cca_mean"])
+            cca_vals.append(cca_val)
 
             pair_rows.append({
                 "architecture": architecture,
@@ -806,21 +859,22 @@ def compare_architecture_methods(
             "max_cca": float(np.nanmax(cca_vals)),
         })
 
-        plot_pair_lines(
-            layers=layer_names,
-            values=cka_vals,
-            title=f"{architecture}: CKA by layer ({m1} vs {m2})",
-            ylabel="Linear CKA",
-            output_path=output_dir / architecture / "plots" / f"{m1}_vs_{m2}_cka_by_layer.png",
-        )
+        if save_pair_line_plots:
+            plot_pair_lines(
+                layers=layer_names,
+                values=cka_vals,
+                title=f"{architecture}: CKA by layer ({m1} vs {m2})",
+                ylabel="Linear CKA",
+                output_path=output_dir / architecture / "plots" / "pair_lines" / f"{m1}_vs_{m2}_cka_by_layer.png",
+            )
 
-        plot_pair_lines(
-            layers=layer_names,
-            values=cca_vals,
-            title=f"{architecture}: CCA by layer ({m1} vs {m2})",
-            ylabel="CCA (mean canonical corr)",
-            output_path=output_dir / architecture / "plots" / f"{m1}_vs_{m2}_cca_by_layer.png",
-        )
+            plot_pair_lines(
+                layers=layer_names,
+                values=cca_vals,
+                title=f"{architecture}: CCA by layer ({m1} vs {m2})",
+                ylabel="CCA (mean canonical corr)",
+                output_path=output_dir / architecture / "plots" / "pair_lines" / f"{m1}_vs_{m2}_cca_by_layer.png",
+            )
 
     arch_dir = output_dir / architecture
     arch_dir.mkdir(parents=True, exist_ok=True)
@@ -831,21 +885,40 @@ def compare_architecture_methods(
     with open(arch_dir / f"{architecture}_summary_similarity.json", "w") as f:
         json.dump(summary_rows, f, indent=2)
 
+    # Original pair-by-layer summary heatmaps
     plot_heatmap(
-        matrix=cka_matrix,
+        matrix=cka_pair_matrix,
         row_labels=row_labels,
         col_labels=layer_names,
-        title=f"{architecture}: Linear CKA across training methods",
-        output_path=arch_dir / "plots" / f"{architecture}_cka_heatmap.png",
+        title=f"{architecture}: Linear CKA across unique method pairs",
+        output_path=arch_dir / "plots" / f"{architecture}_cka_pairwise_heatmap.png",
     )
 
     plot_heatmap(
-        matrix=cca_matrix,
+        matrix=cca_pair_matrix,
         row_labels=row_labels,
         col_labels=layer_names,
-        title=f"{architecture}: CCA across training methods",
-        output_path=arch_dir / "plots" / f"{architecture}_cca_heatmap.png",
+        title=f"{architecture}: CCA across unique method pairs",
+        output_path=arch_dir / "plots" / f"{architecture}_cca_pairwise_heatmap.png",
     )
+
+    # New: non-redundant triangular method x method heatmaps for each layer
+    for layer_name in layer_names:
+        safe_layer_name = layer_name.replace(".", "_")
+
+        plot_triangular_method_heatmap(
+            matrix=square_similarity["cka"][layer_name],
+            labels=method_names,
+            title=f"{architecture}: CKA ({layer_name})",
+            output_path=arch_dir / "plots" / "triangular_by_layer" / f"{architecture}_{safe_layer_name}_cka_triangular.png",
+        )
+
+        plot_triangular_method_heatmap(
+            matrix=square_similarity["cca"][layer_name],
+            labels=method_names,
+            title=f"{architecture}: CCA ({layer_name})",
+            output_path=arch_dir / "plots" / "triangular_by_layer" / f"{architecture}_{safe_layer_name}_cca_triangular.png",
+        )
 
     log(f"Saved similarity analysis for {architecture} to {arch_dir}")
 
@@ -909,6 +982,11 @@ def main():
         default=None,
         help="Optional subset of method tags to compare, e.g. last_layer full gradual_unfreeze_every2",
     )
+    parser.add_argument(
+        "--save-pair-line-plots",
+        action="store_true",
+        help="Also save individual pairwise line plots. Leave off to reduce redundant outputs.",
+    )
     args = parser.parse_args()
 
     np.random.seed(args.seed)
@@ -916,7 +994,6 @@ def main():
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
 
-    # Load dataset metadata
     dataset_dir = args.dataset_root
     metadata_path = dataset_dir / "metadata.pt"
     targets_path = dataset_dir / "targets.pt"
@@ -931,7 +1008,6 @@ def main():
     target_values = targets_data["values"]
     binary_labels = targets_data["binary_label"]
 
-    # Store n_outputs into metadata for convenience
     metadata["n_outputs"] = int(target_values.shape[1])
 
     cache_dir = args.output_dir / "cache"
@@ -996,6 +1072,7 @@ def main():
             output_dir=args.output_dir,
             cca_max_dim=args.cca_max_dim,
             max_val_samples=max_val_samples,
+            save_pair_line_plots=args.save_pair_line_plots,
         )
 
 

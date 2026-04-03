@@ -1,0 +1,11 @@
+feature,saliency
+HGT@surface,2.641169e-06
+TMP@1000mb,6.1580204e-07
+TMP@850mb,5.65231e-07
+VGRD@925mb,5.2390396e-07
+GUST@surface,4.920797e-07
+UGRD@700mb,4.8674053e-07
+VGRD@850mb,4.6716292e-07
+APCP_1hr_acc_fcst@surface,4.6631502e-07
+UGRD@250mb,4.6218597e-07
+RH@2m_above_ground,4.3720686e-07

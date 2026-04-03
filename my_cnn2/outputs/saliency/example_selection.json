@@ -1,0 +1,31 @@
+{
+  "n_candidates": 8760,
+  "selected_examples": {
+    "TP": null,
+    "FP": null,
+    "FN": {
+      "t_idx": 37575,
+      "timestamp": "2022-10-25 15:00:00",
+      "input_path": "/cluster/tufts/c26sp1cs0137/data/assignment2_data/dataset/inputs/2022/X_2022102515.pt",
+      "pred_apcp": -0.016930125653743744,
+      "true_apcp": 2.445345878601074,
+      "pred_rain": false,
+      "true_rain": true,
+      "case": "FN",
+      "confidence_from_threshold": 2.0169301256537437,
+      "absolute_apcp_error": 2.462276004254818
+    },
+    "TN": {
+      "t_idx": 37999,
+      "timestamp": "2022-11-12 07:00:00",
+      "input_path": "/cluster/tufts/c26sp1cs0137/data/assignment2_data/dataset/inputs/2022/X_2022111207.pt",
+      "pred_apcp": -0.01791432499885559,
+      "true_apcp": 0.007934479974210262,
+      "pred_rain": false,
+      "true_rain": false,
+      "case": "TN",
+      "confidence_from_threshold": 2.0179143249988556,
+      "absolute_apcp_error": 0.025848804973065853
+    }
+  }
+}

@@ -1,0 +1,454 @@
+{
+  "weights_path": "my_cnn_weights.pth",
+  "normalization_stats": "normalization_stats_transfer.pt",
+  "validation_accuracy_apcp": 0.9807327858496525,
+  "n_validation_examples": 6332,
+  "confidently_correct": [
+    {
+      "t_idx": 41565,
+      "timestamp": "2023-04-09 21:00:00",
+      "input_path": "/cluster/tufts/c26sp1cs0137/data/assignment2_data/dataset/inputs/2023/X_2023040921.pt",
+      "full_loss": 5.458372592926025,
+      "apcp_loss": 0.027869004756212234,
+      "true_apcp_value": 0.0,
+      "pred_apcp_value": -0.1669401228427887,
+      "true_label": 0,
+      "pred_label": 0,
+      "correct": true,
+      "confidence": 2.1669401228427887,
+      "target_vector": [
+        291.75,
+        16.703125,
+        0.25048828125,
+        0.81884765625,
+        3.541015625,
+        0.0
+      ],
+      "pred_vector": [
+        292.60711669921875,
+        20.193422317504883,
+        2.7559010982513428,
+        0.46461039781570435,
+        7.202021598815918,
+        -0.1669401228427887
+      ],
+      "csv_path": "part2_outputs/confidently_correct/01_confidently_correct_tidx_41565_feature_saliency.csv",
+      "png_path": "part2_outputs/confidently_correct/01_confidently_correct_tidx_41565_feature_saliency.png",
+      "saliency_tensor_path": "part2_outputs/confidently_correct/01_confidently_correct_tidx_41565_full_saliency.pt",
+      "top_features": [
+        {
+          "feature": "HGT@surface",
+          "saliency": 8.255528882727958e-07
+        },
+        {
+          "feature": "TMP@1000mb",
+          "saliency": 2.736966564498289e-07
+        },
+        {
+          "feature": "UGRD@500mb",
+          "saliency": 1.8107826349478273e-07
+        },
+        {
+          "feature": "RH@2m_above_ground",
+          "saliency": 1.7085210402001394e-07
+        },
+        {
+          "feature": "UGRD@850mb",
+          "saliency": 1.6321396856255888e-07
+        },
+        {
+          "feature": "UGRD@10m_above_ground",
+          "saliency": 1.6244375444784964e-07
+        },
+        {
+          "feature": "MCDC@middle_cloud_layer",
+          "saliency": 1.5427922051003407e-07
+        },
+        {
+          "feature": "VGRD@925mb",
+          "saliency": 1.3471436943746085e-07
+        },
+        {
+          "feature": "VIL@entire_atmosphere",
+          "saliency": 1.2998127374430624e-07
+        },
+        {
+          "feature": "VGRD@250mb",
+          "saliency": 1.2916247271732573e-07
+        }
+      ]
+    },
+    {
+      "t_idx": 24908,
+      "timestamp": "2021-05-15 20:00:00",
+      "input_path": "/cluster/tufts/c26sp1cs0137/data/assignment2_data/dataset/inputs/2021/X_2021051520.pt",
+      "full_loss": 31.793182373046875,
+      "apcp_loss": 0.024637585505843163,
+      "true_apcp_value": 0.0,
+      "pred_apcp_value": -0.15696364641189575,
+      "true_label": 0,
+      "pred_label": 0,
+      "correct": true,
+      "confidence": 2.1569636464118958,
+      "target_vector": [
+        295.5,
+        33.0,
+        -5.56640625,
+        0.09600830078125,
+        6.92578125,
+        0.0
+      ],
+      "pred_vector": [
+        298.4516296386719,
+        22.37120246887207,
+        2.7272942066192627,
+        0.4598132371902466,
+        7.290719985961914,
+        -0.15696364641189575
+      ],
+      "csv_path": "part2_outputs/confidently_correct/02_confidently_correct_tidx_24908_feature_saliency.csv",
+      "png_path": "part2_outputs/confidently_correct/02_confidently_correct_tidx_24908_feature_saliency.png",
+      "saliency_tensor_path": "part2_outputs/confidently_correct/02_confidently_correct_tidx_24908_full_saliency.pt",
+      "top_features": [
+        {
+          "feature": "HGT@surface",
+          "saliency": 9.364324000671331e-07
+        },
+        {
+          "feature": "TMP@1000mb",
+          "saliency": 3.7235381000755297e-07
+        },
+        {
+          "feature": "UGRD@10m_above_ground",
+          "saliency": 2.6279965936737426e-07
+        },
+        {
+          "feature": "UGRD@850mb",
+          "saliency": 2.6116634899153723e-07
+        },
+        {
+          "feature": "UGRD@250mb",
+          "saliency": 2.1517489301459136e-07
+        },
+        {
+          "feature": "VIL@entire_atmosphere",
+          "saliency": 2.0849383020049572e-07
+        },
+        {
+          "feature": "MCDC@middle_cloud_layer",
+          "saliency": 1.8967823223192681e-07
+        },
+        {
+          "feature": "UGRD@925mb",
+          "saliency": 1.8842996496459818e-07
+        },
+        {
+          "feature": "VGRD@250mb",
+          "saliency": 1.731351204625753e-07
+        },
+        {
+          "feature": "UGRD@500mb",
+          "saliency": 1.6293381577270338e-07
+        }
+      ]
+    },
+    {
+      "t_idx": 24909,
+      "timestamp": "2021-05-15 21:00:00",
+      "input_path": "/cluster/tufts/c26sp1cs0137/data/assignment2_data/dataset/inputs/2021/X_2021051521.pt",
+      "full_loss": 33.1730842590332,
+      "apcp_loss": 0.0238517913967371,
+      "true_apcp_value": 0.0,
+      "pred_apcp_value": -0.1544402539730072,
+      "true_label": 0,
+      "pred_label": 0,
+      "correct": true,
+      "confidence": 2.154440253973007,
+      "target_vector": [
+        295.5,
+        35.5,
+        -0.36767578125,
+        3.392578125,
+        4.32421875,
+        0.0
+      ],
+      "pred_vector": [
+        298.3759460449219,
+        22.69879150390625,
+        2.7131431102752686,
+        0.4551321864128113,
+        7.282700538635254,
+        -0.1544402539730072
+      ],
+      "csv_path": "part2_outputs/confidently_correct/03_confidently_correct_tidx_24909_feature_saliency.csv",
+      "png_path": "part2_outputs/confidently_correct/03_confidently_correct_tidx_24909_feature_saliency.png",
+      "saliency_tensor_path": "part2_outputs/confidently_correct/03_confidently_correct_tidx_24909_full_saliency.pt",
+      "top_features": [
+        {
+          "feature": "HGT@surface",
+          "saliency": 9.788286661205348e-07
+        },
+        {
+          "feature": "TMP@1000mb",
+          "saliency": 3.8839814919811033e-07
+        },
+        {
+          "feature": "UGRD@850mb",
+          "saliency": 2.7638429855869617e-07
+        },
+        {
+          "feature": "UGRD@10m_above_ground",
+          "saliency": 2.716859341944655e-07
+        },
+        {
+          "feature": "UGRD@250mb",
+          "saliency": 2.2103186836375244e-07
+        },
+        {
+          "feature": "VIL@entire_atmosphere",
+          "saliency": 2.0554627155888738e-07
+        },
+        {
+          "feature": "MCDC@middle_cloud_layer",
+          "saliency": 1.9643192672447185e-07
+        },
+        {
+          "feature": "UGRD@925mb",
+          "saliency": 1.932280326855107e-07
+        },
+        {
+          "feature": "UGRD@500mb",
+          "saliency": 1.7876990909826418e-07
+        },
+        {
+          "feature": "VGRD@250mb",
+          "saliency": 1.682817298842565e-07
+        }
+      ]
+    }
+  ],
+  "confidently_incorrect": [
+    {
+      "t_idx": 18619,
+      "timestamp": "2020-08-26 19:00:00",
+      "input_path": "/cluster/tufts/c26sp1cs0137/data/assignment2_data/dataset/inputs/2020/X_2020082619.pt",
+      "full_loss": 267.295166015625,
+      "apcp_loss": 6.312106609344482,
+      "true_apcp_value": 2.5129499435424805,
+      "pred_apcp_value": 0.000559316948056221,
+      "true_label": 1,
+      "pred_label": 0,
+      "correct": false,
+      "confidence": 1.9994406830519438,
+      "target_vector": [
+        291.25,
+        82.1875,
+        -0.370849609375,
+        2.228515625,
+        5.33203125,
+        2.5129499435424805
+      ],
+      "pred_vector": [
+        295.0222473144531,
+        42.54363250732422,
+        1.8792469501495361,
+        0.19164681434631348,
+        6.875080108642578,
+        0.000559316948056221
+      ],
+      "csv_path": "part2_outputs/confidently_incorrect/01_confidently_incorrect_tidx_18619_feature_saliency.csv",
+      "png_path": "part2_outputs/confidently_incorrect/01_confidently_incorrect_tidx_18619_feature_saliency.png",
+      "saliency_tensor_path": "part2_outputs/confidently_incorrect/01_confidently_incorrect_tidx_18619_full_saliency.pt",
+      "top_features": [
+        {
+          "feature": "HGT@surface",
+          "saliency": 1.6629555830149911e-06
+        },
+        {
+          "feature": "TMP@1000mb",
+          "saliency": 3.9461721712541475e-07
+        },
+        {
+          "feature": "RH@2m_above_ground",
+          "saliency": 3.240705268581223e-07
+        },
+        {
+          "feature": "UGRD@10m_above_ground",
+          "saliency": 2.639725096287293e-07
+        },
+        {
+          "feature": "VGRD@250mb",
+          "saliency": 2.606264501991973e-07
+        },
+        {
+          "feature": "MCDC@middle_cloud_layer",
+          "saliency": 2.521415751743916e-07
+        },
+        {
+          "feature": "APCP_1hr_acc_fcst@surface",
+          "saliency": 2.2417775369376614e-07
+        },
+        {
+          "feature": "TMP@850mb",
+          "saliency": 2.132053111836285e-07
+        },
+        {
+          "feature": "UGRD@500mb",
+          "saliency": 2.1219975110398082e-07
+        },
+        {
+          "feature": "DPT@850mb",
+          "saliency": 2.0750103146838228e-07
+        }
+      ]
+    },
+    {
+      "t_idx": 44205,
+      "timestamp": "2023-07-28 21:00:00",
+      "input_path": "/cluster/tufts/c26sp1cs0137/data/assignment2_data/dataset/inputs/2023/X_2023072821.pt",
+      "full_loss": 39.8773078918457,
+      "apcp_loss": 4.194159030914307,
+      "true_apcp_value": 2.1347298622131348,
+      "pred_apcp_value": 0.08676517754793167,
+      "true_label": 1,
+      "pred_label": 0,
+      "correct": false,
+      "confidence": 1.9132348224520683,
+      "target_vector": [
+        300.25,
+        69.375,
+        -1.3173828125,
+        -1.4951171875,
+        2.443359375,
+        2.1347298622131348
+      ],
+      "pred_vector": [
+        300.7045593261719,
+        55.0252685546875,
+        1.4276509284973145,
+        0.07481497526168823,
+        6.796329498291016,
+        0.08676517754793167
+      ],
+      "csv_path": "part2_outputs/confidently_incorrect/02_confidently_incorrect_tidx_44205_feature_saliency.csv",
+      "png_path": "part2_outputs/confidently_incorrect/02_confidently_incorrect_tidx_44205_feature_saliency.png",
+      "saliency_tensor_path": "part2_outputs/confidently_incorrect/02_confidently_incorrect_tidx_44205_full_saliency.pt",
+      "top_features": [
+        {
+          "feature": "HGT@surface",
+          "saliency": 1.8819981733031454e-06
+        },
+        {
+          "feature": "TMP@1000mb",
+          "saliency": 6.142462893876655e-07
+        },
+        {
+          "feature": "MCDC@middle_cloud_layer",
+          "saliency": 4.63951096207893e-07
+        },
+        {
+          "feature": "UGRD@10m_above_ground",
+          "saliency": 3.602873164254561e-07
+        },
+        {
+          "feature": "UGRD@250mb",
+          "saliency": 3.384872968581476e-07
+        },
+        {
+          "feature": "UGRD@850mb",
+          "saliency": 3.0855201771373686e-07
+        },
+        {
+          "feature": "TMP@850mb",
+          "saliency": 3.070731793286541e-07
+        },
+        {
+          "feature": "RH@2m_above_ground",
+          "saliency": 3.0595595035265433e-07
+        },
+        {
+          "feature": "DPT@500mb",
+          "saliency": 2.921655379850563e-07
+        },
+        {
+          "feature": "UGRD@700mb",
+          "saliency": 2.7462471052785986e-07
+        }
+      ]
+    },
+    {
+      "t_idx": 25796,
+      "timestamp": "2021-06-21 20:00:00",
+      "input_path": "/cluster/tufts/c26sp1cs0137/data/assignment2_data/dataset/inputs/2021/X_2021062120.pt",
+      "full_loss": 227.28843688964844,
+      "apcp_loss": 20.305591583251953,
+      "true_apcp_value": 4.612126350402832,
+      "pred_apcp_value": 0.10595378279685974,
+      "true_label": 1,
+      "pred_label": 0,
+      "correct": false,
+      "confidence": 1.8940462172031403,
+      "target_vector": [
+        292.0,
+        93.0,
+        1.21875,
+        -1.927734375,
+        3.728515625,
+        4.612126350402832
+      ],
+      "pred_vector": [
+        292.69989013671875,
+        56.518367767333984,
+        1.2826180458068848,
+        0.02710479497909546,
+        6.592107772827148,
+        0.10595378279685974
+      ],
+      "csv_path": "part2_outputs/confidently_incorrect/03_confidently_incorrect_tidx_25796_feature_saliency.csv",
+      "png_path": "part2_outputs/confidently_incorrect/03_confidently_incorrect_tidx_25796_feature_saliency.png",
+      "saliency_tensor_path": "part2_outputs/confidently_incorrect/03_confidently_incorrect_tidx_25796_full_saliency.pt",
+      "top_features": [
+        {
+          "feature": "HGT@surface",
+          "saliency": 2.6411689759697765e-06
+        },
+        {
+          "feature": "TMP@1000mb",
+          "saliency": 6.158020369184669e-07
+        },
+        {
+          "feature": "TMP@850mb",
+          "saliency": 5.652310051118548e-07
+        },
+        {
+          "feature": "VGRD@925mb",
+          "saliency": 5.239039637672249e-07
+        },
+        {
+          "feature": "GUST@surface",
+          "saliency": 4.920797209706507e-07
+        },
+        {
+          "feature": "UGRD@700mb",
+          "saliency": 4.867405323238927e-07
+        },
+        {
+          "feature": "VGRD@850mb",
+          "saliency": 4.671629199037852e-07
+        },
+        {
+          "feature": "APCP_1hr_acc_fcst@surface",
+          "saliency": 4.66315015046348e-07
+        },
+        {
+          "feature": "UGRD@250mb",
+          "saliency": 4.6218596594371775e-07
+        },
+        {
+          "feature": "RH@2m_above_ground",
+          "saliency": 4.3720686448978086e-07
+        }
+      ]
+    }
+  ]
+}

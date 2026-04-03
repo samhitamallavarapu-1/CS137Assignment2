@@ -4,6 +4,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import torch
+from tqdm import tqdm
 
 from model import get_model
 
@@ -27,6 +28,7 @@ def load_sample_x(dataset_dir, times, t_idx):
 
 
 def main():
+    print("Loading metadata and targets...")
     metadata = torch.load(DATASET_ROOT / "metadata.pt", weights_only=False)
     targets_data = torch.load(DATASET_ROOT / "targets.pt", weights_only=False)
 
@@ -36,14 +38,16 @@ def main():
 
     # Match current validation choice from train.py
     val_indices = choose_indices(times, [2022])
+    print(f"Number of validation indices: {len(val_indices)}")
 
+    print("Building model...")
     model = get_model(metadata)
     model.eval()
 
     rows = []
 
     with torch.no_grad():
-        for t_idx in val_indices:
+        for t_idx in tqdm(val_indices, desc="Evaluating validation samples", unit="sample"):
             x, x_path, timestamp = load_sample_x(DATASET_ROOT, times, t_idx)
 
             if not torch.isfinite(x).all():
@@ -80,8 +84,10 @@ def main():
                 "absolute_apcp_error": float(abs(pred_apcp - true_apcp)),
             })
 
+    print(f"Finished evaluation. Valid candidate rows collected: {len(rows)}")
+
     selected = {}
-    for case in ["TP", "FP", "FN", "TN"]:
+    for case in tqdm(["TP", "FP", "FN", "TN"], desc="Selecting best examples", unit="case"):
         case_rows = [r for r in rows if r["case"] == case]
         if not case_rows:
             selected[case] = None

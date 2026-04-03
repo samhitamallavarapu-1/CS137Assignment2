@@ -1,0 +1,397 @@
+{
+  "example_id": "01_confidently_correct_tidx_41565",
+  "group": "confidently_correct",
+  "t_idx": 41565,
+  "timestamp": "2023-04-09 21:00:00",
+  "input_path": "/cluster/tufts/c26sp1cs0137/data/assignment2_data/dataset/inputs/2023/X_2023040921.pt",
+  "shape": [
+    450,
+    449,
+    42
+  ],
+  "true_apcp_value": 0.0,
+  "pred_apcp_value": -0.1669401228427887,
+  "true_label": 0,
+  "pred_label": 0,
+  "confidence": 2.1669401228427887,
+  "features": [
+    {
+      "channel_index": 0,
+      "feature_name": "TMP@2m_above_ground",
+      "output_path": "/cluster/tufts/c26sp1cs0137/smalla01/CS137Assignment2/my_cnn/analysis_outputs/raw_feature_heatmaps/confidently_correct/01_confidently_correct_tidx_41565/all_features/000_TMP@2m_above_ground.png",
+      "raw_min": 270.0,
+      "raw_max": 292.0,
+      "raw_mean": 280.905517578125,
+      "raw_std": 3.8119239807128906
+    },
+    {
+      "channel_index": 1,
+      "feature_name": "RH@2m_above_ground",
+      "output_path": "/cluster/tufts/c26sp1cs0137/smalla01/CS137Assignment2/my_cnn/analysis_outputs/raw_feature_heatmaps/confidently_correct/01_confidently_correct_tidx_41565/all_features/001_RH@2m_above_ground.png",
+      "raw_min": 1.203125,
+      "raw_max": 100.0,
+      "raw_mean": 41.03173828125,
+      "raw_std": 16.298553466796875
+    },
+    {
+      "channel_index": 2,
+      "feature_name": "UGRD@10m_above_ground",
+      "output_path": "/cluster/tufts/c26sp1cs0137/smalla01/CS137Assignment2/my_cnn/analysis_outputs/raw_feature_heatmaps/confidently_correct/01_confidently_correct_tidx_41565/all_features/002_UGRD@10m_above_ground.png",
+      "raw_min": -9.3125,
+      "raw_max": 11.5625,
+      "raw_mean": 1.4954794645309448,
+      "raw_std": 3.5684173107147217
+    },
+    {
+      "channel_index": 3,
+      "feature_name": "VGRD@10m_above_ground",
+      "output_path": "/cluster/tufts/c26sp1cs0137/smalla01/CS137Assignment2/my_cnn/analysis_outputs/raw_feature_heatmaps/confidently_correct/01_confidently_correct_tidx_41565/all_features/003_VGRD@10m_above_ground.png",
+      "raw_min": -13.8125,
+      "raw_max": 10.8125,
+      "raw_mean": -0.4452173411846161,
+      "raw_std": 4.267457962036133
+    },
+    {
+      "channel_index": 4,
+      "feature_name": "GUST@surface",
+      "output_path": "/cluster/tufts/c26sp1cs0137/smalla01/CS137Assignment2/my_cnn/analysis_outputs/raw_feature_heatmaps/confidently_correct/01_confidently_correct_tidx_41565/all_features/004_GUST@surface.png",
+      "raw_min": 0.50390625,
+      "raw_max": 22.125,
+      "raw_mean": 7.954918384552002,
+      "raw_std": 3.569298505783081
+    },
+    {
+      "channel_index": 5,
+      "feature_name": "DSWRF@surface",
+      "output_path": "/cluster/tufts/c26sp1cs0137/smalla01/CS137Assignment2/my_cnn/analysis_outputs/raw_feature_heatmaps/confidently_correct/01_confidently_correct_tidx_41565/all_features/005_DSWRF@surface.png",
+      "raw_min": 2.0,
+      "raw_max": 564.0,
+      "raw_mean": 389.2938232421875,
+      "raw_std": 106.36573791503906
+    },
+    {
+      "channel_index": 6,
+      "feature_name": "APCP_1hr_acc_fcst@surface",
+      "output_path": "/cluster/tufts/c26sp1cs0137/smalla01/CS137Assignment2/my_cnn/analysis_outputs/raw_feature_heatmaps/confidently_correct/01_confidently_correct_tidx_41565/all_features/006_APCP_1hr_acc_fcst@surface.png",
+      "raw_min": 0.0,
+      "raw_max": 2.90625,
+      "raw_mean": 0.011158698238432407,
+      "raw_std": 0.13770791888237
+    },
+    {
+      "channel_index": 7,
+      "feature_name": "CAPE@surface",
+      "output_path": "/cluster/tufts/c26sp1cs0137/smalla01/CS137Assignment2/my_cnn/analysis_outputs/raw_feature_heatmaps/confidently_correct/01_confidently_correct_tidx_41565/all_features/007_CAPE@surface.png",
+      "raw_min": 0.0,
+      "raw_max": 180.0,
+      "raw_mean": 3.6636970043182373,
+      "raw_std": 16.9908390045166
+    },
+    {
+      "channel_index": 8,
+      "feature_name": "DPT@1000mb",
+      "output_path": "/cluster/tufts/c26sp1cs0137/smalla01/CS137Assignment2/my_cnn/analysis_outputs/raw_feature_heatmaps/confidently_correct/01_confidently_correct_tidx_41565/all_features/008_DPT@1000mb.png",
+      "raw_min": 248.0,
+      "raw_max": 280.0,
+      "raw_mean": 265.0532531738281,
+      "raw_std": 4.271884918212891
+    },
+    {
+      "channel_index": 9,
+      "feature_name": "DPT@500mb",
+      "output_path": "/cluster/tufts/c26sp1cs0137/smalla01/CS137Assignment2/my_cnn/analysis_outputs/raw_feature_heatmaps/confidently_correct/01_confidently_correct_tidx_41565/all_features/009_DPT@500mb.png",
+      "raw_min": 195.0,
+      "raw_max": 256.0,
+      "raw_mean": 233.69285583496094,
+      "raw_std": 10.826299667358398
+    },
+    {
+      "channel_index": 10,
+      "feature_name": "DPT@700mb",
+      "output_path": "/cluster/tufts/c26sp1cs0137/smalla01/CS137Assignment2/my_cnn/analysis_outputs/raw_feature_heatmaps/confidently_correct/01_confidently_correct_tidx_41565/all_features/010_DPT@700mb.png",
+      "raw_min": 192.0,
+      "raw_max": 270.0,
+      "raw_mean": 243.76634216308594,
+      "raw_std": 6.518042087554932
+    },
+    {
+      "channel_index": 11,
+      "feature_name": "DPT@850mb",
+      "output_path": "/cluster/tufts/c26sp1cs0137/smalla01/CS137Assignment2/my_cnn/analysis_outputs/raw_feature_heatmaps/confidently_correct/01_confidently_correct_tidx_41565/all_features/011_DPT@850mb.png",
+      "raw_min": 200.0,
+      "raw_max": 272.0,
+      "raw_mean": 255.55943298339844,
+      "raw_std": 5.812748432159424
+    },
+    {
+      "channel_index": 12,
+      "feature_name": "DPT@925mb",
+      "output_path": "/cluster/tufts/c26sp1cs0137/smalla01/CS137Assignment2/my_cnn/analysis_outputs/raw_feature_heatmaps/confidently_correct/01_confidently_correct_tidx_41565/all_features/012_DPT@925mb.png",
+      "raw_min": 242.0,
+      "raw_max": 276.0,
+      "raw_mean": 260.90411376953125,
+      "raw_std": 4.495272159576416
+    },
+    {
+      "channel_index": 13,
+      "feature_name": "HGT@1000mb",
+      "output_path": "/cluster/tufts/c26sp1cs0137/smalla01/CS137Assignment2/my_cnn/analysis_outputs/raw_feature_heatmaps/confidently_correct/01_confidently_correct_tidx_41565/all_features/013_HGT@1000mb.png",
+      "raw_min": 161.0,
+      "raw_max": 280.0,
+      "raw_mean": 232.61854553222656,
+      "raw_std": 25.830429077148438
+    },
+    {
+      "channel_index": 14,
+      "feature_name": "HGT@500mb",
+      "output_path": "/cluster/tufts/c26sp1cs0137/smalla01/CS137Assignment2/my_cnn/analysis_outputs/raw_feature_heatmaps/confidently_correct/01_confidently_correct_tidx_41565/all_features/014_HGT@500mb.png",
+      "raw_min": 5312.0,
+      "raw_max": 5696.0,
+      "raw_mean": 5571.04736328125,
+      "raw_std": 67.53709411621094
+    },
+    {
+      "channel_index": 15,
+      "feature_name": "HGT@700mb",
+      "output_path": "/cluster/tufts/c26sp1cs0137/smalla01/CS137Assignment2/my_cnn/analysis_outputs/raw_feature_heatmaps/confidently_correct/01_confidently_correct_tidx_41565/all_features/015_HGT@700mb.png",
+      "raw_min": 2896.0,
+      "raw_max": 3136.0,
+      "raw_mean": 3049.413330078125,
+      "raw_std": 45.12202072143555
+    },
+    {
+      "channel_index": 16,
+      "feature_name": "HGT@850mb",
+      "output_path": "/cluster/tufts/c26sp1cs0137/smalla01/CS137Assignment2/my_cnn/analysis_outputs/raw_feature_heatmaps/confidently_correct/01_confidently_correct_tidx_41565/all_features/016_HGT@850mb.png",
+      "raw_min": 1440.0,
+      "raw_max": 1592.0,
+      "raw_mean": 1540.8116455078125,
+      "raw_std": 32.019081115722656
+    },
+    {
+      "channel_index": 17,
+      "feature_name": "HGT@surface",
+      "output_path": "/cluster/tufts/c26sp1cs0137/smalla01/CS137Assignment2/my_cnn/analysis_outputs/raw_feature_heatmaps/confidently_correct/01_confidently_correct_tidx_41565/all_features/017_HGT@surface.png",
+      "raw_min": -6.21875,
+      "raw_max": 1416.0,
+      "raw_mean": 193.84445190429688,
+      "raw_std": 197.50563049316406
+    },
+    {
+      "channel_index": 18,
+      "feature_name": "TMP@1000mb",
+      "output_path": "/cluster/tufts/c26sp1cs0137/smalla01/CS137Assignment2/my_cnn/analysis_outputs/raw_feature_heatmaps/confidently_correct/01_confidently_correct_tidx_41565/all_features/018_TMP@1000mb.png",
+      "raw_min": 270.0,
+      "raw_max": 290.0,
+      "raw_mean": 280.2242126464844,
+      "raw_std": 3.3057100772857666
+    },
+    {
+      "channel_index": 19,
+      "feature_name": "TMP@500mb",
+      "output_path": "/cluster/tufts/c26sp1cs0137/smalla01/CS137Assignment2/my_cnn/analysis_outputs/raw_feature_heatmaps/confidently_correct/01_confidently_correct_tidx_41565/all_features/019_TMP@500mb.png",
+      "raw_min": 240.0,
+      "raw_max": 258.0,
+      "raw_mean": 248.26223754882812,
+      "raw_std": 2.3032498359680176
+    },
+    {
+      "channel_index": 20,
+      "feature_name": "TMP@700mb",
+      "output_path": "/cluster/tufts/c26sp1cs0137/smalla01/CS137Assignment2/my_cnn/analysis_outputs/raw_feature_heatmaps/confidently_correct/01_confidently_correct_tidx_41565/all_features/020_TMP@700mb.png",
+      "raw_min": 252.0,
+      "raw_max": 270.0,
+      "raw_mean": 262.47894287109375,
+      "raw_std": 3.3798155784606934
+    },
+    {
+      "channel_index": 21,
+      "feature_name": "TMP@850mb",
+      "output_path": "/cluster/tufts/c26sp1cs0137/smalla01/CS137Assignment2/my_cnn/analysis_outputs/raw_feature_heatmaps/confidently_correct/01_confidently_correct_tidx_41565/all_features/021_TMP@850mb.png",
+      "raw_min": 262.0,
+      "raw_max": 278.0,
+      "raw_mean": 269.4170227050781,
+      "raw_std": 2.8523764610290527
+    },
+    {
+      "channel_index": 22,
+      "feature_name": "TMP@925mb",
+      "output_path": "/cluster/tufts/c26sp1cs0137/smalla01/CS137Assignment2/my_cnn/analysis_outputs/raw_feature_heatmaps/confidently_correct/01_confidently_correct_tidx_41565/all_features/022_TMP@925mb.png",
+      "raw_min": 266.0,
+      "raw_max": 284.0,
+      "raw_mean": 274.8512268066406,
+      "raw_std": 2.8919012546539307
+    },
+    {
+      "channel_index": 23,
+      "feature_name": "UGRD@1000mb",
+      "output_path": "/cluster/tufts/c26sp1cs0137/smalla01/CS137Assignment2/my_cnn/analysis_outputs/raw_feature_heatmaps/confidently_correct/01_confidently_correct_tidx_41565/all_features/023_UGRD@1000mb.png",
+      "raw_min": -9.875,
+      "raw_max": 16.0,
+      "raw_mean": 1.974408745765686,
+      "raw_std": 4.248436450958252
+    },
+    {
+      "channel_index": 24,
+      "feature_name": "UGRD@250mb",
+      "output_path": "/cluster/tufts/c26sp1cs0137/smalla01/CS137Assignment2/my_cnn/analysis_outputs/raw_feature_heatmaps/confidently_correct/01_confidently_correct_tidx_41565/all_features/024_UGRD@250mb.png",
+      "raw_min": -10.125,
+      "raw_max": 51.5,
+      "raw_mean": 14.093117713928223,
+      "raw_std": 13.86478042602539
+    },
+    {
+      "channel_index": 25,
+      "feature_name": "UGRD@500mb",
+      "output_path": "/cluster/tufts/c26sp1cs0137/smalla01/CS137Assignment2/my_cnn/analysis_outputs/raw_feature_heatmaps/confidently_correct/01_confidently_correct_tidx_41565/all_features/025_UGRD@500mb.png",
+      "raw_min": -2.875,
+      "raw_max": 28.375,
+      "raw_mean": 9.712700843811035,
+      "raw_std": 7.35291862487793
+    },
+    {
+      "channel_index": 26,
+      "feature_name": "UGRD@700mb",
+      "output_path": "/cluster/tufts/c26sp1cs0137/smalla01/CS137Assignment2/my_cnn/analysis_outputs/raw_feature_heatmaps/confidently_correct/01_confidently_correct_tidx_41565/all_features/026_UGRD@700mb.png",
+      "raw_min": -4.0625,
+      "raw_max": 23.375,
+      "raw_mean": 8.25634479522705,
+      "raw_std": 6.25929594039917
+    },
+    {
+      "channel_index": 27,
+      "feature_name": "UGRD@850mb",
+      "output_path": "/cluster/tufts/c26sp1cs0137/smalla01/CS137Assignment2/my_cnn/analysis_outputs/raw_feature_heatmaps/confidently_correct/01_confidently_correct_tidx_41565/all_features/027_UGRD@850mb.png",
+      "raw_min": -8.4375,
+      "raw_max": 22.125,
+      "raw_mean": 6.546907901763916,
+      "raw_std": 7.367465972900391
+    },
+    {
+      "channel_index": 28,
+      "feature_name": "UGRD@925mb",
+      "output_path": "/cluster/tufts/c26sp1cs0137/smalla01/CS137Assignment2/my_cnn/analysis_outputs/raw_feature_heatmaps/confidently_correct/01_confidently_correct_tidx_41565/all_features/028_UGRD@925mb.png",
+      "raw_min": -9.25,
+      "raw_max": 18.875,
+      "raw_mean": 4.908239841461182,
+      "raw_std": 6.488678455352783
+    },
+    {
+      "channel_index": 29,
+      "feature_name": "VGRD@1000mb",
+      "output_path": "/cluster/tufts/c26sp1cs0137/smalla01/CS137Assignment2/my_cnn/analysis_outputs/raw_feature_heatmaps/confidently_correct/01_confidently_correct_tidx_41565/all_features/029_VGRD@1000mb.png",
+      "raw_min": -15.1875,
+      "raw_max": 11.5625,
+      "raw_mean": -0.5068447589874268,
+      "raw_std": 4.553725719451904
+    },
+    {
+      "channel_index": 30,
+      "feature_name": "VGRD@250mb",
+      "output_path": "/cluster/tufts/c26sp1cs0137/smalla01/CS137Assignment2/my_cnn/analysis_outputs/raw_feature_heatmaps/confidently_correct/01_confidently_correct_tidx_41565/all_features/030_VGRD@250mb.png",
+      "raw_min": -35.25,
+      "raw_max": 54.75,
+      "raw_mean": -3.475733757019043,
+      "raw_std": 22.855976104736328
+    },
+    {
+      "channel_index": 31,
+      "feature_name": "VGRD@500mb",
+      "output_path": "/cluster/tufts/c26sp1cs0137/smalla01/CS137Assignment2/my_cnn/analysis_outputs/raw_feature_heatmaps/confidently_correct/01_confidently_correct_tidx_41565/all_features/031_VGRD@500mb.png",
+      "raw_min": -23.375,
+      "raw_max": 19.0,
+      "raw_mean": -10.715182304382324,
+      "raw_std": 9.150592803955078
+    },
+    {
+      "channel_index": 32,
+      "feature_name": "VGRD@700mb",
+      "output_path": "/cluster/tufts/c26sp1cs0137/smalla01/CS137Assignment2/my_cnn/analysis_outputs/raw_feature_heatmaps/confidently_correct/01_confidently_correct_tidx_41565/all_features/032_VGRD@700mb.png",
+      "raw_min": -15.4375,
+      "raw_max": 9.25,
+      "raw_mean": -8.526778221130371,
+      "raw_std": 2.600515842437744
+    },
+    {
+      "channel_index": 33,
+      "feature_name": "VGRD@850mb",
+      "output_path": "/cluster/tufts/c26sp1cs0137/smalla01/CS137Assignment2/my_cnn/analysis_outputs/raw_feature_heatmaps/confidently_correct/01_confidently_correct_tidx_41565/all_features/033_VGRD@850mb.png",
+      "raw_min": -12.875,
+      "raw_max": 6.28125,
+      "raw_mean": -2.6666135787963867,
+      "raw_std": 4.053520679473877
+    },
+    {
+      "channel_index": 34,
+      "feature_name": "VGRD@925mb",
+      "output_path": "/cluster/tufts/c26sp1cs0137/smalla01/CS137Assignment2/my_cnn/analysis_outputs/raw_feature_heatmaps/confidently_correct/01_confidently_correct_tidx_41565/all_features/034_VGRD@925mb.png",
+      "raw_min": -14.6875,
+      "raw_max": 11.8125,
+      "raw_mean": -0.8322293162345886,
+      "raw_std": 4.805434226989746
+    },
+    {
+      "channel_index": 35,
+      "feature_name": "TCDC@entire_atmosphere",
+      "output_path": "/cluster/tufts/c26sp1cs0137/smalla01/CS137Assignment2/my_cnn/analysis_outputs/raw_feature_heatmaps/confidently_correct/01_confidently_correct_tidx_41565/all_features/035_TCDC@entire_atmosphere.png",
+      "raw_min": 0.0,
+      "raw_max": 100.0,
+      "raw_mean": 11.791422843933105,
+      "raw_std": 27.307262420654297
+    },
+    {
+      "channel_index": 36,
+      "feature_name": "HCDC@high_cloud_layer",
+      "output_path": "/cluster/tufts/c26sp1cs0137/smalla01/CS137Assignment2/my_cnn/analysis_outputs/raw_feature_heatmaps/confidently_correct/01_confidently_correct_tidx_41565/all_features/036_HCDC@high_cloud_layer.png",
+      "raw_min": 0.0,
+      "raw_max": 99.0,
+      "raw_mean": 5.165795803070068,
+      "raw_std": 17.15428924560547
+    },
+    {
+      "channel_index": 37,
+      "feature_name": "MCDC@middle_cloud_layer",
+      "output_path": "/cluster/tufts/c26sp1cs0137/smalla01/CS137Assignment2/my_cnn/analysis_outputs/raw_feature_heatmaps/confidently_correct/01_confidently_correct_tidx_41565/all_features/037_MCDC@middle_cloud_layer.png",
+      "raw_min": 0.0,
+      "raw_max": 100.0,
+      "raw_mean": 8.718257904052734,
+      "raw_std": 25.27660369873047
+    },
+    {
+      "channel_index": 38,
+      "feature_name": "LCDC@low_cloud_layer",
+      "output_path": "/cluster/tufts/c26sp1cs0137/smalla01/CS137Assignment2/my_cnn/analysis_outputs/raw_feature_heatmaps/confidently_correct/01_confidently_correct_tidx_41565/all_features/038_LCDC@low_cloud_layer.png",
+      "raw_min": 0.0,
+      "raw_max": 100.0,
+      "raw_mean": 3.8930859565734863,
+      "raw_std": 15.8753662109375
+    },
+    {
+      "channel_index": 39,
+      "feature_name": "PWAT@entire_atmosphere_single_layer",
+      "output_path": "/cluster/tufts/c26sp1cs0137/smalla01/CS137Assignment2/my_cnn/analysis_outputs/raw_feature_heatmaps/confidently_correct/01_confidently_correct_tidx_41565/all_features/039_PWAT@entire_atmosphere_single_layer.png",
+      "raw_min": 2.78125,
+      "raw_max": 24.75,
+      "raw_mean": 5.533942699432373,
+      "raw_std": 2.1875100135803223
+    },
+    {
+      "channel_index": 40,
+      "feature_name": "RHPW@entire_atmosphere",
+      "output_path": "/cluster/tufts/c26sp1cs0137/smalla01/CS137Assignment2/my_cnn/analysis_outputs/raw_feature_heatmaps/confidently_correct/01_confidently_correct_tidx_41565/all_features/040_RHPW@entire_atmosphere.png",
+      "raw_min": 12.1875,
+      "raw_max": 92.5,
+      "raw_mean": 32.06438064575195,
+      "raw_std": 9.62958812713623
+    },
+    {
+      "channel_index": 41,
+      "feature_name": "VIL@entire_atmosphere",
+      "output_path": "/cluster/tufts/c26sp1cs0137/smalla01/CS137Assignment2/my_cnn/analysis_outputs/raw_feature_heatmaps/confidently_correct/01_confidently_correct_tidx_41565/all_features/041_VIL@entire_atmosphere.png",
+      "raw_min": 0.0,
+      "raw_max": 0.306640625,
+      "raw_mean": 0.0012355679646134377,
+      "raw_std": 0.014009727165102959
+    }
+  ]
+}
